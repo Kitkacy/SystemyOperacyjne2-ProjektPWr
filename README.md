@@ -4,14 +4,14 @@
 
 Projekt implementuje problem **jedzących filozofów**. Jego celem jest przedstawienie zagadnień takich jak wielowątkowość w procesie programu, współdzielenie zasobów przez wątki, deadlocki między wątkami oraz zademonstorwanie radzenia sobie z nimi.
 
-### Opis problemu
+## Opis problemu
 
 **Problem jedzących filozofów zakłada, że:**
 - Istnieje `N` filozofów siedzących przy okrągłym stole. (Gdzie `N` jest argumentem podawanym programowi)
 - Filozof może znajdować się w 3 stanach:
-        1. *Myślenie* – filozof nie korzysta z widelców. (Symbolizowane poprzez 💭)
-        2. *Głód* – filozof próbuje podnieść dwa widelce. (Symbolizowane poprzez 🥪)
-        3. *Jedzenie* – filozof korzysta z obu widelców. (Symbolizowane poprzez 🍴)
+    1. *Myślenie* – filozof nie korzysta z widelców. (Symbolizowane poprzez 💭)
+    2. *Głód* – filozof próbuje podnieść dwa widelce. (Symbolizowane poprzez 🥪)
+    3. *Jedzenie* – filozof korzysta z obu widelców. (Symbolizowane poprzez 🍴)
 - Każdy filozof potrzebuje dwóch widelców (lewego i prawego), aby jeść.
 - Widelce są współdzielone między sąsiadującymi filozofami.
 - Podczas jedzenia, filozof podnosi oba widelce, i dokłada je dopiero po skończeniu posiłku.
