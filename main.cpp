@@ -8,7 +8,7 @@
 #include <string>
 
 std::vector<std::mutex> forks;
-std::mutex theMutex;
+std::mutex mutexForTerm;
 
 void cursorPlacement(int row, int col) {
     std::cout << "\033[" << row << ";" << col << "H";
@@ -20,7 +20,7 @@ void philosopher(int id, int numPhilo) {
     while (true) {
         // Thinking
         {
-            std::lock_guard<std::mutex> lock(theMutex);
+            std::lock_guard<std::mutex> lock(mutexForTerm);
             cursorPlacement(row, 0);
             std::cout << "💭 Philosopher " << id << " is THINKING.";
         }
@@ -28,7 +28,7 @@ void philosopher(int id, int numPhilo) {
 
         // Hungry
         {
-            std::lock_guard<std::mutex> lock(theMutex);
+            std::lock_guard<std::mutex> lock(mutexForTerm);
             cursorPlacement(row, 0);
             std::cout << "🥪 Philosopher " << id << " is HUNGRY.  ";
         }
@@ -47,7 +47,7 @@ void philosopher(int id, int numPhilo) {
 
         // Eating
         {
-            std::lock_guard<std::mutex> lock(theMutex);
+            std::lock_guard<std::mutex> lock(mutexForTerm);
             cursorPlacement(row, 0);
             std::cout << "🍴 Philosopher " << id << " is EATING.  ";
         }
@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
 
     // Header of the program
     {
-        std::lock_guard<std::mutex> lock(theMutex);
+        std::lock_guard<std::mutex> lock(mutexForTerm);
         cursorPlacement(1, 0);
         std::cout << "Press Ctrl+C to exit.";
         cursorPlacement(2, 0);
