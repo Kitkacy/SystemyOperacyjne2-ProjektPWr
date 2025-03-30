@@ -14,7 +14,7 @@ void cursorPlacement(int row, int col) {
 
 void philosopher(int id, int numPhilo) {
     
-    int row = id + 4; //start philosopher rows below the header. have their row consistent with their id
+    int row = id + 6; //start philosopher rows below the header. have their row consistent with their id
     
     while (true) {
         //thinking
@@ -79,6 +79,10 @@ int main(int argc, char* argv[]) {
         std::cout << "=============================================";
         cursorPlacement(3, 0);
         std::cout << "=============Dining Philosophers=============";
+        cursorPlacement(4, 0);
+        std::cout << "=============================================";        
+        cursorPlacement(5, 0);
+        std::cout << "                                             ";
     }
 
     //initialization of the forks vector with the required number of mutexes
@@ -96,8 +100,8 @@ int main(int argc, char* argv[]) {
         p.join();
     }
 
-    //show the cursor again before exiting
-    std::cout << "\033[?25h";
+    //clear the screen and show the cursor again before exiting
+    std::cout << "\033[2J\033[H\033[?25h";
 
     return 0;
 }
