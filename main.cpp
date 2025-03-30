@@ -29,7 +29,7 @@ void philosopher(int id, int numPhilo) {
         {
             std::lock_guard<std::mutex> lock(theMutex);
             cursorPlacement(row, 0);
-            std::cout << "🥪 Philosopher " << id << " is HUNGRY.";
+            std::cout << "🥪 Philosopher " << id << " is HUNGRY.  ";
         }
 
         //fork picking, lower-numbered first to avoid deadlock
@@ -48,7 +48,7 @@ void philosopher(int id, int numPhilo) {
         {
             std::lock_guard<std::mutex> lock(theMutex);
             cursorPlacement(row, 0);
-            std::cout << "🍴 Philosopher " << id << " is EATING.";
+            std::cout << "🍴 Philosopher " << id << " is EATING.  ";
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
