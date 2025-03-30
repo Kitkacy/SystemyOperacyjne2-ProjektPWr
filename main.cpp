@@ -1,3 +1,5 @@
+// Copyright 2025 Wincenty Wensker
+
 #include <iostream>
 #include <thread>
 #include <mutex>
@@ -13,11 +15,10 @@ void cursorPlacement(int row, int col) {
 }
 
 void philosopher(int id, int numPhilo) {
-    
-    int row = id + 6; //start philosopher rows below the header. have their row consistent with their id
-    
+    int row = id + 6;  // Start philosopher rows below the header, consistent with their id
+
     while (true) {
-        //thinking
+        // Thinking
         {
             std::lock_guard<std::mutex> lock(theMutex);
             cursorPlacement(row, 0);
@@ -25,14 +26,14 @@ void philosopher(int id, int numPhilo) {
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-        //hungry
+        // Hungry
         {
             std::lock_guard<std::mutex> lock(theMutex);
             cursorPlacement(row, 0);
             std::cout << "🥪 Philosopher " << id << " is HUNGRY.  ";
         }
 
-        //fork picking, lower-numbered first to avoid deadlock
+        // Fork picking, lower-numbered first to avoid deadlock
         int leftFork = id;
         int rightFork = (id + 1) % numPhilo;
 
@@ -44,7 +45,7 @@ void philosopher(int id, int numPhilo) {
             forks[leftFork].lock();
         }
 
-        //eating
+        // Eating
         {
             std::lock_guard<std::mutex> lock(theMutex);
             cursorPlacement(row, 0);
@@ -52,14 +53,13 @@ void philosopher(int id, int numPhilo) {
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-        //put down forks
+        // Put down forks
         forks[leftFork].unlock();
         forks[rightFork].unlock();
     }
 }
 
 int main(int argc, char* argv[]) {
-
     int numPhilo = std::stoi(argv[1]);
 
     if (numPhilo < 2) {
@@ -67,10 +67,10 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    //clears terminal, hides cursor and puts it at the top left corner
+    // Clears terminal, hides cursor, and puts it at the top left corner
     std::cout << "\033[2J\033[H\033[?25l";
 
-    //header of the program
+    // Header of the program
     {
         std::lock_guard<std::mutex> lock(theMutex);
         cursorPlacement(1, 0);
@@ -80,27 +80,27 @@ int main(int argc, char* argv[]) {
         cursorPlacement(3, 0);
         std::cout << "=============Dining Philosophers=============";
         cursorPlacement(4, 0);
-        std::cout << "=============================================";        
+        std::cout << "=============================================";
         cursorPlacement(5, 0);
         std::cout << "                                             ";
     }
 
-    //initialization of the forks vector with the required number of mutexes
+    // Initialization of the forks vector with the required number of mutexes
     forks = std::vector<std::mutex>(numPhilo);
 
     std::vector<std::thread> philosophers;
 
-    //create and launch philosopher threads
+    // Create and launch philosopher threads
     for (int i = 0; i < numPhilo; ++i) {
         philosophers.emplace_back(philosopher, i, numPhilo);
     }
 
-    //wait for all philosopher threads to complete, which they never will
+    // Wait for all philosopher threads to complete, which they never will
     for (auto& p : philosophers) {
         p.join();
     }
 
-    //clear the screen and show the cursor again before exiting
+    // Clear the screen and show the cursor again before exiting
     std::cout << "\033[2J\033[H\033[?25h";
 
     return 0;
