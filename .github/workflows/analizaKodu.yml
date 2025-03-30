@@ -18,6 +18,6 @@ jobs:
       run: sudo apt-get update && sudo apt-get install -y cppcheck
 
     - name: Run Cppcheck
-      run: cppcheck --enable=all --inconclusive --std=c++17 --quiet /home/wicek/Documents/GitHub/SystemyOperacyjne2-ProjektPWr/main.cpp 2> cppcheck-report.txt
+      run: cppcheck --enable=all --inconclusive --std=c++17 --quiet main.cpp 2> cppcheck-report.txt
 
 
