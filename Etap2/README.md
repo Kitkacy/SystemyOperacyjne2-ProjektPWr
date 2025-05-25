@@ -1,54 +1,92 @@
-# Socket Chat Application
+# SystemyOperacyjne2-ProjektPWr
 
-This is a simple socket-based chat application using mutexes and threads for synchronization between multiple clients.
+## Opis projektu
 
-## Features
+Projekt implementuje **aplikację czatu opartą na socketach**. Jego celem jest przedstawienie zagadnień takich jak wielowątkowość w procesie programu, synchronizacja wątków za pomocą mutexów oraz komunikacja sieciowa przy użyciu socketów.
 
-- Multi-client support
-- Real-time message broadcasting
-- Thread-safe message handling with mutexes
-- Support for user names
-- Connection and disconnection notifications
+## Opis problemu
 
-## Building the Application
+**Aplikacja czatu oparta na socketach zakłada, że:**
+- Istnieje serwer, który obsługuje wielu klientów.
+- Każdy klient ma swój unikalny identyfikator (nazwę).
+- Serwer odbiera wiadomości od klientów i rozsyła je do wszystkich pozostałych klientów.
+- Klienci mogą dołączać i opuszczać czat w dowolnym momencie.
+- Komunikacja musi być synchronizowana, aby uniknąć problemów z współbieżnym dostępem do zasobów.
 
-To build both the server and client applications, run:
+**Funkcje aplikacji:**
+- Obsługa wielu klientów jednocześnie
+- Rozsyłanie wiadomości w czasie rzeczywistym
+- Bezpieczna obsługa wiadomości z wykorzystaniem mutexów
+- Wsparcie dla nazw użytkowników
+- Powiadomienia o dołączeniu i opuszczeniu czatu przez użytkowników
 
-```bash
-make
+### Jak rozwiązano problem?
+
+**Sekcje krytyczne**:
+  - Dostęp do listy wiadomości (mutex `message_mutex`).
+  - Dostęp do listy klientów (mutex `clients_mutex`).
+  - Powiadamianie o nowych wiadomościach (zmienna warunkowa `message_cv`).
+  
+**Rozwiązanie problemu współbieżności**:
+  - Serwer tworzy oddzielny wątek dla każdego podłączonego klienta.
+  - Każdy klient posiada wątek do odbierania wiadomości.
+  - Wykorzystanie mutexów do synchronizacji dostępu do współdzielonych zasobów.
+  - Wykorzystanie zmiennych warunkowych do sygnalizowania nowych wiadomości.
+
+## Instrukcja uruchomienia
+
+(Zakłada się że program będzie uruchamiany na systemie operacyjnym **Linux**)
+
+1. Sklonuj repozytorium:
+   ```bash
+   git clone https://github.com/Kitkacy/SystemyOperacyjne2-ProjektPWr.git
+   cd SystemyOperacyjne2-ProjektPWr/Etap2
+   ```
+
+2. Skompiluj projekt za pomocą `Makefile`:
+   ```bash
+   make all
+   ```
+
+3. Uruchom serwer w jednym terminalu:
+   ```bash
+   ./server
+   ```
+
+4. Uruchom jednego lub więcej klientów w osobnych terminalach:
+   ```bash
+   ./client
+   ```
+
+5. Po uruchomieniu klienta wpisz swoją nazwę użytkownika i zacznij czatować.
+
+6. Aby wyjść z aplikacji klienta, wpisz `quit` i naciśnij Enter.
+
+7. Aby wyczyścić pliki wykonywalne:
+   ```
+   make clean
+   ```
+
+## Przykładowy wygląd działania programu
+
+### Terminal serwera:
+```
+Server started on port 8080
+Waiting for connections...
+Wicek has joined the chat!
+Dawid has joined the chat!
+Wicek: Cześć wszystkim!
+Dawid: Hej, co słychać?
+Wicek has left the chat.
 ```
 
-This will compile both the server (`server`) and client (`client`) executables.
-
-## Running the Application
-
-1. First, start the server in one terminal:
-
-```bash
-./server
+### Terminal klienta:
 ```
-
-2. Then, start one or more clients in separate terminals:
-
-```bash
-./client
+Connected to chat server at 127.0.0.1:8080
+Enter your name: Dawid
+Start chatting (type 'quit' to exit):
+> Wicek has joined the chat!
+> Wicek: Cześć wszystkim!
+> Hej, co słychać?
+> Wicek has left the chat.
 ```
-
-3. When prompted, enter your name in each client terminal.
-
-4. Start chatting! Messages will be broadcasted to all connected clients.
-
-5. To exit a client, type `quit` and press Enter.
-
-## Implementation Details
-
-- The server creates a separate thread for each connected client
-- Mutexes are used to synchronize access to shared resources (message queue, client list)
-- A condition variable is used to notify clients about new messages
-- The client application uses one thread for receiving messages and another for sending messages
-
-## Technical Requirements
-
-- C++17
-- POSIX threads
-- Socket programming
