@@ -1,5 +1,8 @@
-// Socket chat application using mutexes and threads
-// Client side implementation
+// Copyright 2025 Wincenty Wensker Dawid Łapiński
+//
+// Client side implementation of socket-based chat application.
+// This file contains the client code that connects to the server,
+// sends and receives messages, and handles user input.
 
 #include <iostream>
 #include <string>
@@ -16,8 +19,10 @@
 #define BUFFER_SIZE 1024
 #define SERVER_IP "127.0.0.1"
 
-std::mutex console_mutex; // Mutex for synchronizing console output
-std::atomic<bool> running(true); // Flag to control thread execution
+// Mutex for synchronizing console output
+std::mutex console_mutex;
+// Flag to control thread execution
+std::atomic<bool> running(true);
 
 // Function to receive messages from the server
 void receive_messages(int sock_fd) {

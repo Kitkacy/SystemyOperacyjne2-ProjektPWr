@@ -1,5 +1,8 @@
-// Socket chat application using mutexes and threads
-// Server side implementation
+// Copyright 2025 Wincenty Wensker Dawid Łapiński
+//
+// Server side implementation of socket-based chat application.
+// This file contains the server code that handles multiple client connections,
+// broadcasts messages, and manages client threads.
 
 #include <iostream>
 #include <string>
@@ -19,11 +22,16 @@
 #define BUFFER_SIZE 1024
 #define MAX_CLIENTS 10
 
-std::mutex message_mutex; // Mutex for synchronizing access to messages
-std::condition_variable message_cv; // Condition variable for signaling new messages
-std::vector<std::string> messages; // Vector to store all messages
-std::vector<int> client_sockets; // Vector to store client sockets
-std::mutex clients_mutex; // Mutex for synchronizing access to client_sockets
+// Mutex for synchronizing access to messages
+std::mutex message_mutex;
+// Condition variable for signaling new messages
+std::condition_variable message_cv;
+// Vector to store all messages
+std::vector<std::string> messages;
+// Vector to store client sockets
+std::vector<int> client_sockets;
+// Mutex for synchronizing access to client_sockets
+std::mutex clients_mutex;
 
 // Function to broadcast a message to all clients
 void broadcast_message(const std::string& message) {
