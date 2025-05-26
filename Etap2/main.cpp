@@ -17,10 +17,29 @@
 #include <arpa/inet.h>
 #include <cstring>
 #include <algorithm>
+#include <map>
 
 #define PORT 8080
 #define BUFFER_SIZE 1024
 #define MAX_CLIENTS 10
+
+// ANSI color codes for terminal output
+const std::string COLORS[] = {
+    // Red
+    "\033[1;31m", 
+    // Green
+    "\033[1;32m", 
+    // Yellow
+    "\033[1;33m", 
+    // Blue
+    "\033[1;34m", 
+    // Magenta
+    "\033[1;35m", 
+    // Cyan
+    "\033[1;36m", 
+};
+const std::string RESET_COLOR = "\033[0m";
+const int NUM_COLORS = sizeof(COLORS) / sizeof(COLORS[0]);
 
 // Mutex for synchronizing access to messages
 std::mutex message_mutex;
@@ -32,6 +51,12 @@ std::vector<std::string> messages;
 std::vector<int> client_sockets;
 // Mutex for synchronizing access to client_sockets
 std::mutex clients_mutex;
+// Map to store user colors
+std::map<std::string, std::string> user_colors;
+// Mutex for synchronizing access to user_colors
+std::mutex color_mutex;
+// Current color index
+int color_index = 0;
 
 // Function to broadcast a message to all clients
 void broadcast_message(const std::string& message) {
@@ -44,6 +69,7 @@ void broadcast_message(const std::string& message) {
 void handle_client(int client_socket) {
     char buffer[BUFFER_SIZE];
     std::string name;
+    std::string user_color;
     
     // Get client's name
     int bytes_read = recv(client_socket, buffer, BUFFER_SIZE, 0);
@@ -55,10 +81,19 @@ void handle_client(int client_socket) {
     buffer[bytes_read] = '\0';
     name = buffer;
     
-    // Announce new client
-    std::string welcome_message = name + " has joined the chat!";
-    broadcast_message(welcome_message);
+    // Assign a color to the user
+    {
+        std::lock_guard<std::mutex> lock(color_mutex);
+        user_color = COLORS[color_index];
+        user_colors[name] = user_color;
+        // Increment and cycle color index
+        color_index = (color_index + 1) % NUM_COLORS;
+    }
     
+    // Announce new client
+    std::string welcome_message = user_color + name + RESET_COLOR + " has joined the chat!";
+    
+    broadcast_message(welcome_message);
     std::cout << welcome_message << std::endl;
     
     // Create a thread to send messages to this client
@@ -89,14 +124,19 @@ void handle_client(int client_socket) {
         }
         
         buffer[bytes_read] = '\0';
-        std::string message = name + ": " + buffer;
+        std::string color = user_colors[name];
         
-        broadcast_message(message);
-        std::cout << message << std::endl;
+        // Format the message with color
+        std::string colored_message = color + name + RESET_COLOR + ": " + buffer;
+        
+        broadcast_message(colored_message);
+        std::cout << colored_message << std::endl;
     }
     
     // Client disconnected
-    std::string disconnect_message = name + " has left the chat.";
+    std::string color = user_colors[name];
+    std::string disconnect_message = color + name + RESET_COLOR + " has left the chat.";
+    
     broadcast_message(disconnect_message);
     std::cout << disconnect_message << std::endl;
     
