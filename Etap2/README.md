@@ -19,7 +19,6 @@ Projekt implementuje **aplikację czatu opartą na socketach**. Jego celem jest 
 - Bezpieczna obsługa wiadomości z wykorzystaniem mutexów
 - Wsparcie dla nazw użytkowników
 - Powiadomienia o dołączeniu i opuszczeniu czatu przez użytkowników
-- Dwa rodzaje klientów: tekstowy (konsolowy) oraz graficzny (GUI)
 
 ### Jak rozwiązano problem?
 
@@ -54,22 +53,16 @@ Projekt implementuje **aplikację czatu opartą na socketach**. Jego celem jest 
    ./server
    ```
 
-4. Uruchom jednego lub więcej klientów tekstowych w osobnych terminalach:
+4. Uruchom jednego lub więcej klientów w osobnych terminalach:
    ```bash
    ./client
    ```
 
-5. Alternatywnie, uruchom klienta z graficznym interfejsem:
-   ```bash
-   ./gui_client/gui_client
-   ```
+5. Po uruchomieniu klienta wpisz swoją nazwę użytkownika i zacznij czatować.
 
-6. Po uruchomieniu klienta wpisz swoją nazwę użytkownika i zacznij czatować.
+6. Aby wyjść z aplikacji klienta, wpisz `quit` i naciśnij Enter.
 
-7. Aby wyjść z aplikacji klienta tekstowego, wpisz `quit` i naciśnij Enter.
-   W przypadku klienta graficznego, zamknij okno aplikacji.
-
-8. Aby wyczyścić pliki wykonywalne:
+7. Aby wyczyścić pliki wykonywalne:
    ```
    make clean
    ```
