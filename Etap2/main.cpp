@@ -62,8 +62,8 @@ int color_index = 0;
 void broadcast_message(const std::string& message) {
     std::lock_guard<std::mutex> lock(message_mutex);
     messages.push_back(message);
-    message_cv.notify_all(); // Notify all waiting threads
-}
+    // Notify all waiting threads
+    message_cv.notify_all(); 
 
 // Function to handle a client connection
 void handle_client(int client_socket) {
